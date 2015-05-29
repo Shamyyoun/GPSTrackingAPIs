@@ -2,9 +2,10 @@
 
 require_once 'connection.php';
 
-if (isset($_GET['vehicle_id']) && isset($_GET['password']) && isset($_GET['name'])) {
+if (isset($_GET['username']) && isset($_GET['vehicle_id']) && isset($_GET['password']) && isset($_GET['name'])) {
 
     // escape sql statements from parameters
+	$username = mysql_real_escape_string($_GET['username']);
 	$vehicle_id = mysql_real_escape_string($_GET['vehicle_id']);
     $password = mysql_real_escape_string($_GET['password']);
     $name = mysql_real_escape_string($_GET['name']);
@@ -17,12 +18,13 @@ if (isset($_GET['vehicle_id']) && isset($_GET['password']) && isset($_GET['name'
 	$brand = mysql_real_escape_string($_GET['brand']);
 
     // validate required inputs
-    if (empty($vehicle_id) || empty($password) || empty($name)) {
+    if (empty($username) || empty($vehicle_id) || empty($password) || empty($name)) {
         echo "error";
         return;
     }
 
     // inputs in final form
+	$username = strip_tags($username);
 	$vehicle_id = strip_tags($vehicle_id);
     $password = strip_tags($password);
     $name = strip_tags($name);
@@ -35,8 +37,8 @@ if (isset($_GET['vehicle_id']) && isset($_GET['password']) && isset($_GET['name'
 	$brand = strip_tags($brand);
 
     // prepare sql statement
-    $sql = "INSERT INTO vehicles (id, password, name, purpose, licence_number, number, color, model, year, brand)"
-			. " VALUES ('$vehicle_id', '$password', '$name', '$purpose', $licence_number, $number, '$color', '$model', $year, '$brand')";
+    $sql = "INSERT INTO vehicles (id, password, name, purpose, licence_number, number, color, model, year, brand, user_id)"
+			. " VALUES ('$vehicle_id', '$password', '$name', '$purpose', $licence_number, $number, '$color', '$model', $year, '$brand', '$username')";
 			
     // execute query
     $result = mysql_query($sql);
